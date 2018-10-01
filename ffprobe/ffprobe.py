@@ -42,21 +42,24 @@ class FFProbe:
         self.audio=[]
         datalines=[]
         for a in iter(p.stdout.readline, b''):
-            if re.match('\[STREAM\]',a):
+            a = a.decode('UTF-8')
+            if re.match(r'\[STREAM\]', a):
                 datalines=[]
-            elif re.match('\[\/STREAM\]',a):
+            elif re.match(r'\[\/STREAM\]', a):
                 self.streams.append(FFStream(datalines))
                 datalines=[]
             else:
                 datalines.append(a)
         for a in iter(p.stderr.readline, b''):
-            if re.match('\[STREAM\]',a):
+            a = a.decode('UTF-8')
+            if re.match(r'\[STREAM\]', a):
                 datalines=[]
-            elif re.match('\[\/STREAM\]',a):
+            elif re.match(r'\[\/STREAM\]', a):
                 self.streams.append(FFStream(datalines))
                 datalines=[]
             else:
                 datalines.append(a)
+        print(datalines)
         p.stdout.close()
         p.stderr.close()
         for a in self.streams:
@@ -115,7 +118,7 @@ class FFStream:
                 try:
                     size=(int(self.__dict__['width']),int(self.__dict__['height']))
                 except Exception as e:
-                    print "None integer size %s:%s" %(str(self.__dict__['width']),str(+self.__dict__['height']))
+                    print("None integer size %s:%s" %(str(self.__dict__['width']),str(+self.__dict__['height'])))
                     size=(0,0)
         return size
 
@@ -140,7 +143,7 @@ class FFStream:
                 try:
                     f=int(self.__dict__['nb_frames'])
                 except Exception as e:
-                    print "None integer frame count"
+                    print("None integer frame count")
         return f
     
     def durationSeconds(self):
@@ -154,7 +157,7 @@ class FFStream:
                 try:
                     f=float(self.__dict__['duration'])
                 except Exception as e:
-                    print "None numeric duration"
+                    print("None numeric duration")
         return f
     
     def language(self):
@@ -202,8 +205,16 @@ class FFStream:
             try:
                 b=int(self.__dict__['bit_rate'])
             except Exception as e:
-                print "None integer bitrate"
+                print("None integer bitrate")
         return b
             
 if __name__ == '__main__':
-    print "Module ffprobe url"
+    print("Module ffprobe url")
+
+    metadata=FFProbe(url="rtmp://mvtv.dyndns.tv:1935/live/mgtv")
+    print(metadata.streams)
+    for stream in metadata.streams:
+        if stream.isVideo():
+            print("Video codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
+        if stream.isAudio():
+            print("Audio codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
