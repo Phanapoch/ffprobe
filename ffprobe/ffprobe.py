@@ -59,7 +59,7 @@ class FFProbe:
                 datalines=[]
             else:
                 datalines.append(a)
-        print(datalines)
+
         p.stdout.close()
         p.stderr.close()
         for a in self.streams:
@@ -208,13 +208,13 @@ class FFStream:
                 print("None integer bitrate")
         return b
             
-if __name__ == '__main__':
-    print("Module ffprobe url")
+# if __name__ == '__main__':
+#     print("Module ffprobe url")
 
-    metadata=FFProbe(url="rtmp://mvtv.dyndns.tv:1935/live/mgtv")
-    print(metadata.streams)
-    for stream in metadata.streams:
-        if stream.isVideo():
-            print("Video codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
-        if stream.isAudio():
-            print("Audio codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
+#     metadata=FFProbe(url="rtmp://mvtv.dyndns.tv:1935/live/mgtv")
+#     print(metadata.streams)
+#     for stream in metadata.streams:
+#         if stream.isVideo():
+#             print("Video codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
+#         if stream.isAudio():
+#             print("Audio codec %s bitrate=%s." %(stream.codec(), stream.bitrate() ))
